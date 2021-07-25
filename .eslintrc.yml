@@ -18,6 +18,7 @@ parserOptions:
 
 ignorePatterns:
   - 'dist'
+  - 'public'
 
 rules:
     no-console: 0

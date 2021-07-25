@@ -1,39 +1,78 @@
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-
 import HTMLWebpackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import TerserWebpackPlugin from 'terser-webpack-plugin';
+import CssMinimierWebpackPlugin from 'css-minimizer-webpack-plugin';
+import webpack from 'webpack';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const isDev = process.env.NODE_ENV === 'development';
+const isProd = !isDev;
+
+const optimization = () => {
+  const config = {
+    splitChunks: {
+      chunks: 'all',
+    },
+  };
+
+  if (isProd) {
+    config.minimizer = [
+      new CssMinimierWebpackPlugin(),
+      new TerserWebpackPlugin(),
+    ];
+  }
+
+  return config;
+};
 
 export default {
   context: path.resolve(__dirname, 'src'),
-  mode: 'development',
+  mode: process.env.NODE_ENV || 'development',
   entry: './index.js',
   output: {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'public'),
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
     },
   },
+  optimization: optimization(),
   devServer: {
     port: 4200,
+    hot: isDev,
   },
-  plugins: [
-    new HTMLWebpackPlugin({
-      template: './index.html',
-    }),
-    new CleanWebpackPlugin(),
-  ],
+  plugins: (() => {
+    const plugins = [
+      new HTMLWebpackPlugin({
+        template: './index.html',
+        minify: {
+          collapseWhitespace: isProd,
+        },
+      }),
+      new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' }),
+      new CleanWebpackPlugin(),
+    ];
+
+    if (isDev) {
+      return [
+        ...plugins,
+        new webpack.HotModuleReplacementPlugin(),
+      ];
+    }
+
+    return plugins;
+  })(),
   module: {
     rules: [
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
     ],
   },
