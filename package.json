@@ -22,8 +22,11 @@
   },
   "homepage": "https://github.com/1g0rbm/frontend-project-lvl3#readme",
   "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8",
     "@jest/globals": "^27.0.6",
     "@types/mini-css-extract-plugin": "^2.0.1",
+    "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.2.0",
