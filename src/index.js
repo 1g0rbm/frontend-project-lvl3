@@ -1,3 +1,3 @@
-import './styles/style.css';
+import './styles/_custom.scss';
 
 console.log('AAA');

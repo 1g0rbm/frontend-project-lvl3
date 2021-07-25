@@ -29,12 +29,14 @@ const optimization = () => {
   return config;
 };
 
+const fielename = (ext) => (isDev ? `[name].${ext}` : `[name].[contenthash].${ext}`);
+
 export default {
   context: path.resolve(__dirname, 'src'),
   mode: process.env.NODE_ENV || 'development',
   entry: './index.js',
   output: {
-    filename: '[name].[contenthash].js',
+    filename: fielename('js'),
     path: path.resolve(__dirname, 'public'),
   },
   resolve: {
@@ -55,7 +57,7 @@ export default {
           collapseWhitespace: isProd,
         },
       }),
-      new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' }),
+      new MiniCssExtractPlugin({ filename: fielename('css') }),
       new CleanWebpackPlugin(),
     ];
 
@@ -73,6 +75,10 @@ export default {
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.s[ac]ss$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
     ],
   },
