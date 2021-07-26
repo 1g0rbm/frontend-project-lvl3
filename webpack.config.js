@@ -5,6 +5,7 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserWebpackPlugin from 'terser-webpack-plugin';
 import CssMinimierWebpackPlugin from 'css-minimizer-webpack-plugin';
+import StylelintWebpackPlugin from 'stylelint-webpack-plugin';
 import webpack from 'webpack';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -49,6 +50,7 @@ export default {
     port: 4200,
     hot: isDev,
   },
+  devtool: isDev ? 'source-map' : '',
   plugins: (() => {
     const plugins = [
       new HTMLWebpackPlugin({
@@ -65,6 +67,7 @@ export default {
       return [
         ...plugins,
         new webpack.HotModuleReplacementPlugin(),
+        new StylelintWebpackPlugin(),
       ];
     }
 
@@ -74,7 +77,7 @@ export default {
     rules: [
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'eslint-loader'],
       },
       {
         test: /\.s[ac]ss$/,
@@ -83,12 +86,12 @@ export default {
       {
         test: /\.m?js$/,
         exclude: /node_modules/,
-        use: {
+        use: [{
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env'],
           },
-        },
+        }, 'eslint-loader'],
       },
     ],
   },
