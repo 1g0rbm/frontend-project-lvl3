@@ -5,6 +5,11 @@ const parser = new DOMParser();
 export default (rssXml) => {
   const doc = parser.parseFromString(rssXml, 'application/xml');
 
+  const err = doc.querySelector('parsererror');
+  if (err) {
+    throw new Error(err.textContent.trim());
+  }
+
   const feedId = _.uniqueId('feed_');
 
   return {

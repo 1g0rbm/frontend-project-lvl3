@@ -15,3 +15,10 @@ test('parsing valid rss feed', () => {
 
   expect(parseRss(rssFeed)).toEqual(rssAst);
 });
+
+test('parsing invalid rss feed', () => {
+  const rssFeedPath = join(__dirname, '..', '..', '__fixtures__', 'invalid_feed.rss');
+  const rssFeed = loadFileContent(rssFeedPath);
+
+  expect(() => parseRss(rssFeed)).toThrowError('4:5: disallowed character in attribu');
+});
