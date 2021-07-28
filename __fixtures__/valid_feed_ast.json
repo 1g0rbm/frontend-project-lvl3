@@ -1,0 +1,25 @@
+{
+  "id": "feed_1",
+  "title": "Test Feed",
+  "description": "Test Feed",
+  "posts": [
+    {
+      "description": "Example description for post 3",
+      "id": "feed_1.post_2",
+      "link": "https://test.com/example/post-1",
+      "title": "Post 3"
+    },
+    {
+      "description": "Example description for post 2",
+      "id": "feed_1.post_3",
+      "link": "https://test.com/example/post-2",
+      "title": "Post 2"
+    },
+    {
+      "description": "Example description for post 1",
+      "id": "feed_1.post_4",
+      "link": "https://test.com/example/post-1",
+      "title": "Post 1"
+    }
+  ]
+}

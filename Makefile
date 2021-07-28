@@ -1,4 +1,4 @@
-check: lint style-lint
+check: lint style-lint test
 
 install:
 	npm ci
@@ -18,3 +18,10 @@ watch:
 	npm run watch
 start:
 	npm run start
+
+test:
+	npm test
+single-test:
+	npm test -- -t '$(name)'
+test-coverage:
+	npm test -- --coverage

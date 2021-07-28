@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx jest",
     "dev": "cross-env NODE_ENV=development webpack --mode development",
     "build": "cross-env NODE_ENV=production webpack --mode production",
     "watch": "cross-env NODE_ENV=development webpack --mode development --watch",
@@ -54,11 +54,16 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.9.2",
+    "axios": "^0.21.1",
     "bootstrap": "^5.0.2",
-    "popper.js": "^1.16.1"
+    "lodash": "^4.17.21",
+    "on-change": "^3.0.2",
+    "popper.js": "^1.16.1",
+    "yup": "^0.32.9"
   },
   "jest": {
     "bail": 1,
+    "testEnvironment": "jsdom",
     "modulePathIgnorePatterns": [
       "helpers"
     ]

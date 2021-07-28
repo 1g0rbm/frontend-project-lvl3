@@ -1,1 +1,4 @@
-import './styles/_custom.scss';
+import './styles/style.scss';
+import app from './app/app.js';
+
+app();
