@@ -15,7 +15,7 @@ export default (rssXml) => {
   return {
     id: feedId,
     title: doc.querySelector('title').textContent.trim(),
-    description: doc.querySelector('title').textContent.trim(),
+    description: doc.querySelector('description').textContent.trim(),
     posts: _.map(doc.querySelectorAll('channel item'), (item) => ({
       id: `${feedId}.${_.uniqueId('post_')}`,
       title: item.querySelector('title').textContent.trim(),
