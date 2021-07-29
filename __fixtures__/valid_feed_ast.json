@@ -1,7 +1,8 @@
 {
   "id": "feed_1",
   "title": "Test Feed",
-  "description": "Test Feed",
+  "description": "Feed for test",
+  "link": "https://test.com/",
   "posts": [
     {
       "description": "Example description for post 3",

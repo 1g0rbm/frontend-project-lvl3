@@ -1,13 +1,12 @@
 import onChange from 'on-change';
 import * as yup from 'yup';
-import axios from 'axios';
 import parseRss from './parseRss.js';
+import loadRss from './loadRss.js';
 
 export default () => {
   const initialState = {
     state: 'clean',
     input: null,
-    sources: [],
     feeds: [],
     posts: [],
     errors: [],
@@ -96,24 +95,25 @@ export default () => {
       watchedState.state = 'pending';
       watchedState.input = view.input.value;
 
-      const schema = yup.string().url().notOneOf(watchedState.sources);
-      schema.validate(view.input.value)
-        .then((url) => axios.get(url))
-        .then((response) => parseRss(response.data))
+      const schema = yup.string()
+        .url()
+        .notOneOf(watchedState.feeds.map((feed) => feed.source));
+      schema.validate(watchedState.input)
+        .then((url) => loadRss(url))
+        .then((response) => parseRss(response))
         .then(({
-          id,
-          title,
-          description,
-          posts,
+          id, title, description, link, posts,
         }) => {
-          watchedState.errors = [];
-          watchedState.feeds.push({ id, title, description });
+          watchedState.feeds.push({
+            id, title, description, link, source: watchedState.input,
+          });
           watchedState.posts = [...watchedState.posts, ...posts];
+          watchedState.errors = [];
           watchedState.input = null;
           watchedState.state = 'show';
         })
         .catch((err) => {
-          console.log('ERR: ', err.errors);
+          console.log('ERR: ', err);
           watchedState.errors = err.errors;
           watchedState.state = 'invalid';
         });
