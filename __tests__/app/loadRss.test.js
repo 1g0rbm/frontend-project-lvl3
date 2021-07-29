@@ -20,5 +20,13 @@ test('successfull rss loading', async () => {
     .get('/get?url=url&disableCache=true')
     .reply(200, { contents: rssFeed });
 
-  expect(await loadRss('url')).toBe(rssFeed);
+  await expect(loadRss('url')).resolves.toBe(rssFeed);
+});
+
+test('error rss loading', async () => {
+  nock('https://hexlet-allorigins.herokuapp.com')
+    .get('/get?url=url&disableCache=true')
+    .replyWithError('Enternal error');
+
+  await expect(loadRss('url')).rejects.toMatch('Enternal error');
 });
