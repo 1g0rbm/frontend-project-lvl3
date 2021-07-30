@@ -1,10 +1,28 @@
+import 'regenerator-runtime/runtime.js';
 import onChange from 'on-change';
 import * as yup from 'yup';
+import i18n from 'i18next';
 import parseRss from './parseRss.js';
 import loadRss from './loadRss.js';
 import View from './View.js';
+import resources from './locales/index.js';
 
-export default () => {
+export default async () => {
+  await i18n.init({
+    lng: 'ru',
+    resources,
+  });
+
+  yup.setLocale({
+    mixed: {
+      notOneOf: i18n.t('errors.url_exist'),
+      required: i18n.t('errors.required'),
+    },
+    string: {
+      url: i18n.t('errors.url'),
+    },
+  });
+
   const initialState = {
     state: 'clean',
     input: null,
@@ -22,6 +40,7 @@ export default () => {
           view.loadForm();
           break;
         case 'invalid':
+          view.cleanupForm();
           view.renderFeedback(watchedState);
           break;
         case 'show':
@@ -42,6 +61,7 @@ export default () => {
       watchedState.input = view.input.value;
 
       const schema = yup.string()
+        .required()
         .url()
         .notOneOf(watchedState.feeds.map((feed) => feed.source));
       schema.validate(watchedState.input)
@@ -59,7 +79,7 @@ export default () => {
           watchedState.state = 'show';
         })
         .catch((err) => {
-          watchedState.errors = err.errors ?? ['Unknown error'];
+          watchedState.errors = err.errors ?? [i18n.t('errors.unknown')];
           watchedState.state = 'invalid';
         });
     });

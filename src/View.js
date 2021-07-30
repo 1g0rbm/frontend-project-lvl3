@@ -1,3 +1,5 @@
+import i18n from 'i18next';
+
 export default class View {
   constructor() {
     this.app = document.getElementById('app');
@@ -29,7 +31,7 @@ export default class View {
 
     const head = document.createElement('h2');
     head.className = 'card-title h4';
-    head.textContent = 'Posts';
+    head.textContent = i18n.t('posts');
     const headCardBody = document.createElement('div');
     headCardBody.className = 'card-body';
     headCardBody.append(head);
@@ -72,7 +74,7 @@ export default class View {
       });
     } else {
       p.classList.add('text-success');
-      p.textContent = 'Feed successfully load';
+      p.textContent = i18n.t('feed_loaded');
     }
 
     this.form.closest('.row').append(p);
@@ -86,7 +88,7 @@ export default class View {
 
     const head = document.createElement('h2');
     head.className = 'card-title h4';
-    head.textContent = 'Feeds';
+    head.textContent = i18n.t('feeds');
     const headCardBody = document.createElement('div');
     headCardBody.className = 'card-body';
     headCardBody.append(head);

@@ -1,4 +1,6 @@
 import './styles/style.scss';
-import app from './app/app.js';
+import app from './app.js';
 
-app();
+const run = async () => app();
+
+run();
