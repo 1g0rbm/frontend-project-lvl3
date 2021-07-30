@@ -2,6 +2,7 @@ import onChange from 'on-change';
 import * as yup from 'yup';
 import parseRss from './parseRss.js';
 import loadRss from './loadRss.js';
+import View from './View.js';
 
 export default () => {
   const initialState = {
@@ -12,78 +13,20 @@ export default () => {
     errors: [],
   };
 
+  const view = new View();
+
   window.addEventListener('DOMContentLoaded', () => {
-    const view = {
-      app: document.getElementById('app'),
-      form: document.getElementById('rssForm'),
-      input: document.getElementById('rssSource'),
-      submitBtn: document.querySelector('[type="submit"]'),
-      posts: document.getElementById('rssPosts'),
-      feeds: document.getElementById('rssFeeds'),
-    };
-
-    const renderFeeds = ({ input, feeds }) => {
-      view.feeds.innerHTML = '';
-      if (feeds.length === 0) {
-        return;
-      }
-
-      const head = document.createElement('h2');
-      head.textContent = 'Feeds';
-      const ul = document.createElement('ul');
-      ul.className = 'list-group border-0 rounded-0';
-
-      feeds.forEach((feed) => {
-        const h3 = document.createElement('h3');
-        h3.className = 'h6 m-0';
-        h3.textContent = feed.title;
-
-        const p = document.createElement('p');
-        p.className = 'm-0 small text-black-50';
-        p.textContent = feed.description;
-
-        const li = document.createElement('li');
-        li.className = 'list-group-item border-0 border-end-0';
-        li.append(h3);
-        li.append(p);
-
-        ul.append(li);
-      });
-
-      view.feeds.append(head);
-      view.feeds.append(ul);
-      view.submitBtn.disabled = false;
-      view.input.value = input;
-    };
-
-    const renderError = ({ errors }) => {
-      view.submitBtn.disabled = false;
-      view.input.classList.remove('is-invalid');
-      view.app.querySelectorAll('p.feedback.text-danger')
-        .forEach((p) => p.remove());
-
-      if (errors.length > 0) {
-        view.input.classList.add('is-invalid');
-        errors.forEach((error) => {
-          const p = document.createElement('p');
-          p.classList = 'feedback m-0 small text-danger';
-          p.textContent = error;
-          view.form.closest('.row').append(p);
-        });
-      }
-    };
-
     const watchedState = onChange(initialState, () => {
       switch (watchedState.state) {
         case 'pending':
           view.submitBtn.disabled = true;
           break;
         case 'invalid':
-          renderError(watchedState);
+          view.renderError(watchedState);
           break;
         case 'show':
-          renderFeeds(watchedState);
-          renderError(watchedState);
+          view.renderFeeds(watchedState);
+          view.renderError(watchedState);
           break;
         case 'clean':
         default:
@@ -119,6 +62,4 @@ export default () => {
         });
     });
   });
-
-  console.log('application is started...');
 };
