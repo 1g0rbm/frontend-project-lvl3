@@ -9,8 +9,6 @@ export default class View {
   }
 
   renderPosts({ input, posts }) {
-    console.log('POSTS: ', posts);
-
     this.posts.innerHTML = '';
     if (posts.length === 0) {
       return;
@@ -49,6 +47,29 @@ export default class View {
     this.posts.append(ul);
     this.submitBtn.disabled = false;
     this.input.value = input;
+  }
+
+  renderFeedback({ errors }) {
+    this.submitBtn.disabled = false;
+    this.input.classList.remove('is-invalid');
+    this.app.querySelectorAll('p.feedback')
+      .forEach((p) => p.remove());
+
+    const p = document.createElement('p');
+    p.className = 'feedback m-0 small';
+
+    if (errors.length > 0) {
+      this.input.classList.add('is-invalid');
+      errors.forEach((error) => {
+        p.classList.add('text-danger');
+        p.textContent = error;
+      });
+    } else {
+      p.classList.add('text-success');
+      p.textContent = 'Feed successfully load';
+    }
+
+    this.form.closest('.row').append(p);
   }
 
   renderError({ errors }) {

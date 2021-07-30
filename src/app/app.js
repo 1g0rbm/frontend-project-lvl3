@@ -22,12 +22,12 @@ export default () => {
           view.submitBtn.disabled = true;
           break;
         case 'invalid':
-          view.renderError(watchedState);
+          view.renderFeedback(watchedState);
           break;
         case 'show':
           view.renderPosts(watchedState);
           view.renderFeeds(watchedState);
-          view.renderError(watchedState);
+          view.renderFeedback(watchedState);
           break;
         case 'clean':
         default:
@@ -57,7 +57,6 @@ export default () => {
           watchedState.state = 'show';
         })
         .catch((err) => {
-          console.log('ERR: ', err);
           watchedState.errors = err.errors ?? ['Unknown error'];
           watchedState.state = 'invalid';
         });
