@@ -25,6 +25,7 @@ export default () => {
           view.renderError(watchedState);
           break;
         case 'show':
+          view.renderPosts(watchedState);
           view.renderFeeds(watchedState);
           view.renderError(watchedState);
           break;
@@ -57,7 +58,7 @@ export default () => {
         })
         .catch((err) => {
           console.log('ERR: ', err);
-          watchedState.errors = err.errors;
+          watchedState.errors = err.errors ?? ['Unknown error'];
           watchedState.state = 'invalid';
         });
     });

@@ -8,6 +8,49 @@ export default class View {
     this.feeds = document.getElementById('rssFeeds');
   }
 
+  renderPosts({ input, posts }) {
+    console.log('POSTS: ', posts);
+
+    this.posts.innerHTML = '';
+    if (posts.length === 0) {
+      return;
+    }
+
+    const head = document.createElement('h2');
+    head.className = 'card-title h4';
+    head.textContent = 'Posts';
+    const headCardBody = document.createElement('div');
+    headCardBody.className = 'card-body';
+    headCardBody.append(head);
+    const headCard = document.createElement('div');
+    headCard.className = 'card border-0';
+    headCard.append(headCardBody);
+
+    const ul = document.createElement('ul');
+    ul.className = 'list-group border-0 rounded-0';
+
+    posts.forEach((post) => {
+      console.log('POST: ', post);
+
+      const a = document.createElement('a');
+      a.href = post.link;
+      a.textContent = post.title;
+      a.className = 'fw-bold';
+      a.target = '_blank';
+
+      const li = document.createElement('li');
+      li.className = 'list-group-item border-0 border-end-0';
+      li.append(a);
+
+      ul.append(li);
+    });
+
+    this.posts.append(headCard);
+    this.posts.append(ul);
+    this.submitBtn.disabled = false;
+    this.input.value = input;
+  }
+
   renderError({ errors }) {
     this.submitBtn.disabled = false;
     this.input.classList.remove('is-invalid');
@@ -32,7 +75,14 @@ export default class View {
     }
 
     const head = document.createElement('h2');
+    head.className = 'card-title h4';
     head.textContent = 'Feeds';
+    const headCardBody = document.createElement('div');
+    headCardBody.className = 'card-body';
+    headCardBody.append(head);
+    const headCard = document.createElement('div');
+    headCard.className = 'card border-0';
+    headCard.append(headCardBody);
     const ul = document.createElement('ul');
     ul.className = 'list-group border-0 rounded-0';
 
@@ -53,7 +103,7 @@ export default class View {
       ul.append(li);
     });
 
-    this.feeds.append(head);
+    this.feeds.append(headCard);
     this.feeds.append(ul);
     this.submitBtn.disabled = false;
     this.input.value = input;
