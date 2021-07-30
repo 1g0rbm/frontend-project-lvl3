@@ -19,18 +19,20 @@ export default () => {
     const watchedState = onChange(initialState, () => {
       switch (watchedState.state) {
         case 'pending':
-          view.submitBtn.disabled = true;
+          view.loadForm();
           break;
         case 'invalid':
           view.renderFeedback(watchedState);
           break;
         case 'show':
+          view.cleanupForm();
           view.renderPosts(watchedState);
           view.renderFeeds(watchedState);
           view.renderFeedback(watchedState);
           break;
         case 'clean':
         default:
+          view.cleanupForm();
       }
     });
 

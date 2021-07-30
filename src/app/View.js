@@ -8,6 +8,19 @@ export default class View {
     this.feeds = document.getElementById('rssFeeds');
   }
 
+  loadForm() {
+    this.submitBtn.disabled = true;
+  }
+
+  cleanupForm() {
+    this.input.value = null;
+    this.input.focus();
+    this.submitBtn.disabled = false;
+    this.input.classList.remove('is-invalid');
+    this.app.querySelectorAll('p.feedback')
+      .forEach((p) => p.remove());
+  }
+
   renderPosts({ input, posts }) {
     this.posts.innerHTML = '';
     if (posts.length === 0) {
@@ -28,8 +41,6 @@ export default class View {
     ul.className = 'list-group border-0 rounded-0';
 
     posts.forEach((post) => {
-      console.log('POST: ', post);
-
       const a = document.createElement('a');
       a.href = post.link;
       a.textContent = post.title;
@@ -50,11 +61,6 @@ export default class View {
   }
 
   renderFeedback({ errors }) {
-    this.submitBtn.disabled = false;
-    this.input.classList.remove('is-invalid');
-    this.app.querySelectorAll('p.feedback')
-      .forEach((p) => p.remove());
-
     const p = document.createElement('p');
     p.className = 'feedback m-0 small';
 
@@ -70,23 +76,6 @@ export default class View {
     }
 
     this.form.closest('.row').append(p);
-  }
-
-  renderError({ errors }) {
-    this.submitBtn.disabled = false;
-    this.input.classList.remove('is-invalid');
-    this.app.querySelectorAll('p.feedback.text-danger')
-      .forEach((p) => p.remove());
-
-    if (errors.length > 0) {
-      this.input.classList.add('is-invalid');
-      errors.forEach((error) => {
-        const p = document.createElement('p');
-        p.classList = 'feedback m-0 small text-danger';
-        p.textContent = error;
-        this.form.closest('.row').append(p);
-      });
-    }
   }
 
   renderFeeds({ input, feeds }) {
