@@ -50,7 +50,7 @@ export default {
     port: 4200,
     hot: isDev,
   },
-  devtool: isDev ? 'source-map' : '',
+  devtool: isDev ? 'source-map' : false,
   plugins: (() => {
     const plugins = [
       new HTMLWebpackPlugin({
