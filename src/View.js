@@ -10,20 +10,23 @@ export default class View {
     this.feeds = document.getElementById('rssFeeds');
   }
 
-  loadForm() {
+  disableForm() {
     this.submitBtn.disabled = true;
   }
 
-  cleanupForm() {
-    this.input.value = null;
-    this.input.focus();
-    this.submitBtn.disabled = false;
+  cleanupFeedback() {
     this.input.classList.remove('is-invalid');
     this.app.querySelectorAll('p.feedback')
       .forEach((p) => p.remove());
   }
 
-  renderPosts({ input, posts }) {
+  enableForm({ input }) {
+    this.input.value = input;
+    this.input.focus();
+    this.submitBtn.disabled = false;
+  }
+
+  renderPosts({ posts }) {
     this.posts.innerHTML = '';
     if (posts.length === 0) {
       return;
@@ -58,8 +61,6 @@ export default class View {
 
     this.posts.append(headCard);
     this.posts.append(ul);
-    this.submitBtn.disabled = false;
-    this.input.value = input;
   }
 
   renderFeedback({ errors }) {
