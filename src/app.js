@@ -28,9 +28,10 @@ export default async () => {
   const initialState = {
     state: 'clean',
     input: null,
+    currentPostId: null,
     feeds: [],
     posts: [],
-    readPosts: [],
+    readPostsIds: [],
     errors: [],
   };
 
@@ -55,6 +56,7 @@ export default async () => {
           view.renderFeedback(watchedState);
           break;
         case 'show-new-posts':
+          view.renderModal(watchedState);
           view.renderPosts(watchedState);
           break;
         case 'clean':
@@ -74,11 +76,15 @@ export default async () => {
     });
 
     view.posts.addEventListener('click', (e) => {
-      if (e.target.tagName !== 'A') {
+      const { target: { tagName, dataset: { postId } } } = e;
+      if (tagName !== 'A' && tagName !== 'BUTTON') {
         return;
       }
 
-      watchedState.readPosts.push(e.target.dataset.postId);
+      console.log('POST_ID: ', postId);
+
+      watchedState.readPostsIds.push(postId);
+      watchedState.currentPostId = postId;
       watchedState.state = 'show-new-posts';
     });
 

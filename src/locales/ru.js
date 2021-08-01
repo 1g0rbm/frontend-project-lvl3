@@ -3,6 +3,7 @@ const ru = {
     feeds: 'Фиды',
     feed_loaded: 'Фид загружен',
     posts: 'Посты',
+    view: 'Просмотр',
     errors: {
       unknown: 'Неизвестная ошибка',
       url: 'Ссылка должна быть валидным URL',

@@ -1,4 +1,5 @@
 import i18n from 'i18next';
+import _ from 'lodash';
 
 export default class View {
   constructor() {
@@ -8,6 +9,7 @@ export default class View {
     this.submitBtn = document.querySelector('[type="submit"]');
     this.posts = document.getElementById('rssPosts');
     this.feeds = document.getElementById('rssFeeds');
+    this.modal = document.getElementById('modal');
   }
 
   disableForm() {
@@ -26,7 +28,19 @@ export default class View {
     this.submitBtn.disabled = false;
   }
 
-  renderPosts({ readPosts, posts }) {
+  renderModal({ currentPostId, posts }) {
+    const post = _.find(posts, { id: currentPostId });
+
+    if (!post) {
+      return;
+    }
+
+    this.modal.querySelector('.modal-title').textContent = post.title;
+    this.modal.querySelector('.modal-body').innerHTML = post.description;
+    this.modal.querySelector('.go-to-article').href = post.link;
+  }
+
+  renderPosts({ readPostsIds, posts }) {
     this.posts.innerHTML = '';
     if (posts.length === 0) {
       return;
@@ -49,13 +63,21 @@ export default class View {
       const a = document.createElement('a');
       a.href = post.link;
       a.textContent = post.title;
-      a.className = readPosts.includes(post.id) ? 'fw-normal' : 'fw-bold';
+      a.className = readPostsIds.includes(post.id) ? 'fw-normal' : 'fw-bold';
       a.target = '_blank';
       a.dataset.postId = post.id;
 
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-outline-primary btn-sm';
+      btn.textContent = i18n.t('view');
+      btn.dataset.postId = post.id;
+      btn.dataset.bsToggle = 'modal';
+      btn.dataset.bsTarget = '#modal';
+
       const li = document.createElement('li');
-      li.className = 'list-group-item border-0 border-end-0';
+      li.className = 'list-group-item d-flex justify-content-between align-items-start border-0 border-end-0';
       li.append(a);
+      li.append(btn);
 
       ul.append(li);
     });
