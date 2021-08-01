@@ -26,7 +26,7 @@ export default class View {
     this.submitBtn.disabled = false;
   }
 
-  renderPosts({ posts }) {
+  renderPosts({ readPosts, posts }) {
     this.posts.innerHTML = '';
     if (posts.length === 0) {
       return;
@@ -49,8 +49,9 @@ export default class View {
       const a = document.createElement('a');
       a.href = post.link;
       a.textContent = post.title;
-      a.className = 'fw-bold';
+      a.className = readPosts.includes(post.id) ? 'fw-normal' : 'fw-bold';
       a.target = '_blank';
+      a.dataset.postId = post.id;
 
       const li = document.createElement('li');
       li.className = 'list-group-item border-0 border-end-0';

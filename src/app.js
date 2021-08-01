@@ -30,6 +30,7 @@ export default async () => {
     input: null,
     feeds: [],
     posts: [],
+    readPosts: [],
     errors: [],
   };
 
@@ -70,6 +71,15 @@ export default async () => {
             watchedState.state = 'show-new-posts';
           }
         });
+    });
+
+    view.posts.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'A') {
+        return;
+      }
+
+      watchedState.readPosts.push(e.target.dataset.postId);
+      watchedState.state = 'show-new-posts';
     });
 
     view.form.addEventListener('submit', (e) => {
