@@ -9,7 +9,7 @@ import resources from './locales/index.js';
 import Timer from './Timer.js';
 import loadNewPosts from './loadNewPosts.js';
 
-export default async () => {
+const app = async () => {
   await i18n.init({
     lng: 'ru',
     resources,
@@ -117,4 +117,8 @@ export default async () => {
         });
     });
   });
+};
+
+export default async () => {
+  await app();
 };

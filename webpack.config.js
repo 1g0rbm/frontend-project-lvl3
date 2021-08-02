@@ -34,7 +34,7 @@ const fielename = (ext) => (isDev ? `[name].${ext}` : `[name].[contenthash].${ex
 
 export default {
   mode: process.env.NODE_ENV || 'development',
-  entry: './src/index.js',
+  entry: './index.js',
   output: {
     filename: fielename('js'),
     path: path.resolve(__dirname, 'public'),
@@ -48,7 +48,7 @@ export default {
   plugins: (() => {
     const plugins = [
       new HTMLWebpackPlugin({
-        template: './src/index.html',
+        template: './index.html',
         minify: {
           collapseWhitespace: isProd,
         },
