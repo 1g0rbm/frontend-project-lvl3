@@ -35,7 +35,7 @@ const fielename = (ext) => (isDev ? `[name].${ext}` : `[name].[contenthash].${ex
 export default {
   context: path.resolve(__dirname, 'src'),
   mode: process.env.NODE_ENV || 'development',
-  entry: './index.js',
+  entry: '../index.js',
   output: {
     filename: fielename('js'),
     path: path.resolve(__dirname, 'public'),
