@@ -1,7 +1,7 @@
 const ru = {
   translation: {
     feeds: 'Фиды',
-    feed_loaded: 'RSS успешно загружен,',
+    feed_loaded: 'RSS успешно загружен',
     posts: 'Посты',
     view: 'Просмотр',
     errors: {
