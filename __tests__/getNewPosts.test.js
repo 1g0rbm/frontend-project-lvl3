@@ -9,16 +9,16 @@ import loadFileContent from './helpers/loadFileContent.js';
 
 axios.defaults.adapter = http;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const filenamePath = fileURLToPath(import.meta.url);
+const dirnamePath = dirname(filenamePath);
 
 let rssFeed = null;
 let state = null;
 beforeAll(() => {
-  const rssFeedPath = join(__dirname, '..', '__fixtures__', 'valid_feed.rss');
+  const rssFeedPath = join(dirnamePath, '..', '__fixtures__', 'valid_feed.rss');
   rssFeed = loadFileContent(rssFeedPath);
 
-  const statePath = join(__dirname, '..', '__fixtures__', 'filled_state.json');
+  const statePath = join(dirnamePath, '..', '__fixtures__', 'filled_state.json');
   state = JSON.parse(loadFileContent(statePath));
 });
 

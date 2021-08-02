@@ -4,20 +4,20 @@ import { test, expect, beforeAll } from '@jest/globals';
 import parseRss from '../src/parseRss.js';
 import loadFileContent from './helpers/loadFileContent.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const filenamePath = fileURLToPath(import.meta.url);
+const dirnamePath = dirname(filenamePath);
 
 let validFeed = null;
 let invalidFeed = null;
 let ast = null;
 beforeAll(() => {
-  const rssValidFeedPath = join(__dirname, '..', '__fixtures__', 'valid_feed.rss');
+  const rssValidFeedPath = join(dirnamePath, '..', '__fixtures__', 'valid_feed.rss');
   validFeed = loadFileContent(rssValidFeedPath);
 
-  const rssAstPath = join(__dirname, '..', '__fixtures__', 'valid_feed_ast.json');
+  const rssAstPath = join(dirnamePath, '..', '__fixtures__', 'valid_feed_ast.json');
   ast = JSON.parse(loadFileContent(rssAstPath));
 
-  const rssInvalidFeedPath = join(__dirname, '..', '__fixtures__', 'invalid_feed.rss');
+  const rssInvalidFeedPath = join(dirnamePath, '..', '__fixtures__', 'invalid_feed.rss');
   invalidFeed = loadFileContent(rssInvalidFeedPath);
 });
 

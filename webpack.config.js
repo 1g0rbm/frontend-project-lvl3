@@ -8,8 +8,8 @@ import CssMinimierWebpackPlugin from 'css-minimizer-webpack-plugin';
 import StylelintWebpackPlugin from 'stylelint-webpack-plugin';
 import webpack from 'webpack';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const filenamePath = fileURLToPath(import.meta.url);
+const dirnamePath = dirname(filenamePath);
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = !isDev;
 
@@ -37,7 +37,7 @@ export default {
   entry: './index.js',
   output: {
     filename: fielename('js'),
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(dirnamePath, 'public'),
   },
   optimization: optimization(),
   devServer: {

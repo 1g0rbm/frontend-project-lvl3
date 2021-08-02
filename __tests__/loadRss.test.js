@@ -9,11 +9,11 @@ import loadFileContent from './helpers/loadFileContent.js';
 
 axios.defaults.adapter = http;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const filenamePath = fileURLToPath(import.meta.url);
+const dirnamePath = dirname(filenamePath);
 
 test('successfull rss loading', async () => {
-  const rssFeedPath = join(__dirname, '..', '__fixtures__', 'valid_feed.rss');
+  const rssFeedPath = join(dirnamePath, '..', '__fixtures__', 'valid_feed.rss');
   const rssFeed = loadFileContent(rssFeedPath);
 
   nock('https://hexlet-allorigins.herokuapp.com')
