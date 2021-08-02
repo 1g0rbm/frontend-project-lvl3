@@ -48,7 +48,7 @@ export default {
   plugins: (() => {
     const plugins = [
       new HTMLWebpackPlugin({
-        template: './index.html',
+        template: './src/index.html',
         minify: {
           collapseWhitespace: isProd,
         },
