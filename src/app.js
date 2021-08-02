@@ -111,7 +111,7 @@ const app = async () => {
         timer.start();
       })
       .catch((err) => {
-        watchedState.errors = err.errors.map((error) => i18n.t(error)) ?? [i18n.t('errors.unknown')];
+        watchedState.errors.push(i18n.t(err.message));
         watchedState.state = 'invalid';
       });
   });

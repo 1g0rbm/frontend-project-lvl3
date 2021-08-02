@@ -10,6 +10,10 @@ export default (rssXml, existedFeedId = null) => {
     throw new Error('errors.invalid_rss');
   }
 
+  if (doc.firstChild.tagName !== 'rss') {
+    throw new Error('errors.invalid_rss');
+  }
+
   const feedId = existedFeedId ?? _.uniqueId('feed_');
 
   return {
