@@ -10,6 +10,6 @@ export default (feedUrl) => {
   return new Promise((resolve, reject) => {
     axios.get(url.toString())
       .then((response) => resolve(response.data.contents))
-      .catch((err) => reject(err.message));
+      .catch(() => reject(new Error('errors.internet')));
   });
 };

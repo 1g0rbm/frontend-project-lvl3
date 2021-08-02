@@ -81,8 +81,6 @@ export default async () => {
         return;
       }
 
-      console.log('POST_ID: ', postId);
-
       watchedState.readPostsIds.push(postId);
       watchedState.currentPostId = postId;
       watchedState.state = 'show-new-posts';
@@ -114,7 +112,7 @@ export default async () => {
           timer.start();
         })
         .catch((err) => {
-          watchedState.errors = err.errors ?? [i18n.t('errors.unknown')];
+          watchedState.errors = err.errors.map((error) => i18n.t(error)) ?? [i18n.t('errors.unknown')];
           watchedState.state = 'invalid';
         });
     });

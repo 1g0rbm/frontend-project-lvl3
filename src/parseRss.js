@@ -7,7 +7,7 @@ export default (rssXml, existedFeedId = null) => {
 
   const err = doc.querySelector('parsererror');
   if (err) {
-    throw new Error(err.textContent.trim());
+    throw new Error('errors.invalid_rss');
   }
 
   const feedId = existedFeedId ?? _.uniqueId('feed_');

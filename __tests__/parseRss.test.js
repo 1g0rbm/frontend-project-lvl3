@@ -30,5 +30,5 @@ test('parsing valid rss feed with existed feedId', () => {
 });
 
 test('parsing invalid rss feed', () => {
-  expect(() => parseRss(invalidFeed)).toThrowError('4:5: disallowed character in attribu');
+  expect(() => parseRss(invalidFeed)).toThrowError('errors.invalid_rss');
 });
