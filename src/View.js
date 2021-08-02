@@ -14,10 +14,12 @@ export default class View {
 
   disableForm() {
     this.submitBtn.disabled = true;
+    this.input.setAttribute('readonly', true);
   }
 
   cleanupFeedback() {
     this.input.classList.remove('is-invalid');
+    this.input.removeAttribute('readonly');
     this.app.querySelectorAll('p.feedback')
       .forEach((p) => p.remove());
   }
