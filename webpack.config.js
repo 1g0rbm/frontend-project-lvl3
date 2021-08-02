@@ -33,17 +33,11 @@ const optimization = () => {
 const fielename = (ext) => (isDev ? `[name].${ext}` : `[name].[contenthash].${ext}`);
 
 export default {
-  context: path.resolve(__dirname, 'src'),
   mode: process.env.NODE_ENV || 'development',
-  entry: './index.js',
+  entry: './src/index.js',
   output: {
     filename: fielename('js'),
     path: path.resolve(__dirname, 'public'),
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
   },
   optimization: optimization(),
   devServer: {
@@ -54,7 +48,7 @@ export default {
   plugins: (() => {
     const plugins = [
       new HTMLWebpackPlugin({
-        template: '../index.html',
+        template: './index.html',
         minify: {
           collapseWhitespace: isProd,
         },
