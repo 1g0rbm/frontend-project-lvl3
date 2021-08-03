@@ -1,6 +1,18 @@
 import i18n from 'i18next';
 import _ from 'lodash';
 
+const createHeadCard = (title) => {
+  const head = document.createElement('h2');
+  head.className = 'card-title h4';
+  head.textContent = title;
+  const headCardBody = document.createElement('div');
+  headCardBody.className = 'card-body';
+  headCardBody.append(head);
+  const headCard = document.createElement('div');
+  headCard.className = 'card border-0';
+  headCard.append(headCardBody);
+};
+
 export default class View {
   constructor() {
     this.app = document.getElementById('app');
@@ -48,16 +60,7 @@ export default class View {
       return;
     }
 
-    const head = document.createElement('h2');
-    head.className = 'card-title h4';
-    head.textContent = i18n.t('posts');
-    const headCardBody = document.createElement('div');
-    headCardBody.className = 'card-body';
-    headCardBody.append(head);
-    const headCard = document.createElement('div');
-    headCard.className = 'card border-0';
-    headCard.append(headCardBody);
-
+    const headCard = createHeadCard(i18n.t('posts'));
     const ul = document.createElement('ul');
     ul.className = 'list-group border-0 rounded-0';
 
@@ -112,15 +115,7 @@ export default class View {
       return;
     }
 
-    const head = document.createElement('h2');
-    head.className = 'card-title h4';
-    head.textContent = i18n.t('feeds');
-    const headCardBody = document.createElement('div');
-    headCardBody.className = 'card-body';
-    headCardBody.append(head);
-    const headCard = document.createElement('div');
-    headCard.className = 'card border-0';
-    headCard.append(headCardBody);
+    const headCard = createHeadCard(i18n.t('feeds'));
     const ul = document.createElement('ul');
     ul.className = 'list-group border-0 rounded-0';
 
