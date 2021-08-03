@@ -11,6 +11,8 @@ const createHeadCard = (title) => {
   const headCard = document.createElement('div');
   headCard.className = 'card border-0';
   headCard.append(headCardBody);
+
+  return headCard;
 };
 
 export default class View {
@@ -22,6 +24,7 @@ export default class View {
     this.posts = document.getElementById('rssPosts');
     this.feeds = document.getElementById('rssFeeds');
     this.modal = document.getElementById('modal');
+    this.feedback = document.querySelector('.feedback');
   }
 
   disableForm() {
@@ -31,9 +34,10 @@ export default class View {
 
   cleanupFeedback() {
     this.input.classList.remove('is-invalid');
+    this.feedback.classList.remove('text-success');
+    this.feedback.classList.remove('text-danger');
     this.input.removeAttribute('readonly');
-    this.app.querySelectorAll('p.feedback')
-      .forEach((p) => p.remove());
+    this.feedback.textContent = '';
   }
 
   enableForm({ input }) {
@@ -92,21 +96,17 @@ export default class View {
   }
 
   renderFeedback({ errors }) {
-    const p = document.createElement('p');
-    p.className = 'feedback m-0 small';
-
+    console.log(this.feedback);
     if (errors.length > 0) {
       this.input.classList.add('is-invalid');
+      this.feedback.classList.add('text-danger');
       errors.forEach((error) => {
-        p.classList.add('text-danger');
-        p.textContent = error;
+        this.feedback.textContent = error;
       });
     } else {
-      p.classList.add('text-success');
-      p.textContent = i18n.t('feed_loaded');
+      this.feedback.classList.add('text-success');
+      this.feedback.textContent = i18n.t('feed_loaded');
     }
-
-    this.form.closest('.row').append(p);
   }
 
   renderFeeds({ input, feeds }) {
