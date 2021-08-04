@@ -15,28 +15,15 @@ test('create timer', () => {
   expect(counter).toBe(0);
 });
 
-test('run timer test', () => {
-  let counter = 0;
-  const timer = new Timer(() => {
-    counter += 1;
-  }, 1000);
+test('start timer test', () => (
+  new Promise((resolve) => {
+    const counter = 0;
+    const timer = new Timer(() => {
+      resolve(counter + 1);
+    }, 1000);
 
-  timer.start();
-  jest.runOnlyPendingTimers();
-  expect(counter).toBe(1);
-});
-
-test('run and stop timer test', () => {
-  let counter = 0;
-  const timer = new Timer(() => {
-    counter += 1;
-  }, 1000);
-
-  timer.start();
-  jest.runOnlyPendingTimers();
-  expect(counter).toBe(1);
-
-  timer.stop();
-  jest.runOnlyPendingTimers();
-  expect(counter).toBe(1);
-});
+    timer.start();
+    jest.runOnlyPendingTimers();
+  })
+    .then((data) => expect(data).toBe(1))
+));

@@ -34,15 +34,15 @@ const app = () => {
         state.state = 'show-new-posts';
       });
 
-      const timer = new Timer(() => {
+      const timer = new Timer(() => (
         loadNewPosts(state)
           .then((newPosts) => {
             if (newPosts.length > 0) {
               state.posts = [...state.posts, ...newPosts];
               state.state = 'show-new-posts';
             }
-          });
-      });
+          })
+      ));
 
       elems.form.addEventListener('submit', (e) => {
         e.preventDefault();
