@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import _ from 'lodash';
+import resources from './locales/index.js';
 
 const createHeadCard = (title) => {
   const head = document.createElement('h2');
@@ -15,35 +16,29 @@ const createHeadCard = (title) => {
   return headCard;
 };
 
-export default class View {
-  constructor() {
-    this.app = document.getElementById('app');
-    this.form = document.getElementById('rssForm');
-    this.input = document.getElementById('rssSource');
-    this.submitBtn = document.querySelector('[type="submit"]');
-    this.posts = document.getElementById('rssPosts');
-    this.feeds = document.getElementById('rssFeeds');
-    this.modal = document.getElementById('modal');
-    this.feedback = document.querySelector('.feedback');
+class View {
+  constructor(elems, t) {
+    this.elems = elems;
+    this.i18n = t;
   }
 
   disableForm() {
-    this.submitBtn.disabled = true;
-    this.input.setAttribute('readonly', true);
+    this.elems.submitBtn.disabled = true;
+    this.elems.input.setAttribute('readonly', true);
   }
 
   cleanupFeedback() {
-    this.input.classList.remove('is-invalid');
-    this.feedback.classList.remove('text-success');
-    this.feedback.classList.remove('text-danger');
-    this.input.removeAttribute('readonly');
-    this.feedback.textContent = '';
+    this.elems.input.classList.remove('is-invalid');
+    this.elems.feedback.classList.remove('text-success');
+    this.elems.feedback.classList.remove('text-danger');
+    this.elems.input.removeAttribute('readonly');
+    this.elems.feedback.textContent = '';
   }
 
   enableForm({ input }) {
-    this.input.value = input;
-    this.input.focus();
-    this.submitBtn.disabled = false;
+    this.elems.input.value = input;
+    this.elems.input.focus();
+    this.elems.submitBtn.disabled = false;
   }
 
   renderModal({ currentPostId, posts }) {
@@ -53,18 +48,18 @@ export default class View {
       return;
     }
 
-    this.modal.querySelector('.modal-title').textContent = post.title;
-    this.modal.querySelector('.modal-body').innerHTML = post.description;
-    this.modal.querySelector('.go-to-article').href = post.link;
+    this.elems.modal.querySelector('.modal-title').textContent = post.title;
+    this.elems.modal.querySelector('.modal-body').innerHTML = post.description;
+    this.elems.modal.querySelector('.go-to-article').href = post.link;
   }
 
   renderPosts({ readPostsIds, posts }) {
-    this.posts.innerHTML = '';
+    this.elems.posts.innerHTML = '';
     if (posts.length === 0) {
       return;
     }
 
-    const headCard = createHeadCard(i18n.t('posts'));
+    const headCard = createHeadCard(this.i18n('posts'));
     const ul = document.createElement('ul');
     ul.className = 'list-group border-0 rounded-0';
 
@@ -78,7 +73,7 @@ export default class View {
 
       const btn = document.createElement('button');
       btn.className = 'btn btn-outline-primary btn-sm';
-      btn.textContent = i18n.t('view');
+      btn.textContent = this.i18n('view');
       btn.dataset.postId = post.id;
       btn.dataset.bsToggle = 'modal';
       btn.dataset.bsTarget = '#modal';
@@ -91,31 +86,30 @@ export default class View {
       ul.append(li);
     });
 
-    this.posts.append(headCard);
-    this.posts.append(ul);
+    this.elems.posts.append(headCard);
+    this.elems.posts.append(ul);
   }
 
   renderFeedback({ errors }) {
-    console.log(this.feedback);
     if (errors.length > 0) {
-      this.input.classList.add('is-invalid');
-      this.feedback.classList.add('text-danger');
+      this.elems.input.classList.add('is-invalid');
+      this.elems.feedback.classList.add('text-danger');
       errors.forEach((error) => {
-        this.feedback.textContent = error;
+        this.elems.feedback.textContent = this.i18n(error);
       });
     } else {
-      this.feedback.classList.add('text-success');
-      this.feedback.textContent = i18n.t('feed_loaded');
+      this.elems.feedback.classList.add('text-success');
+      this.elems.feedback.textContent = this.i18n('feed_loaded');
     }
   }
 
   renderFeeds({ input, feeds }) {
-    this.feeds.innerHTML = '';
+    this.elems.feeds.innerHTML = '';
     if (feeds.length === 0) {
       return;
     }
 
-    const headCard = createHeadCard(i18n.t('feeds'));
+    const headCard = createHeadCard(this.i18n('feeds'));
     const ul = document.createElement('ul');
     ul.className = 'list-group border-0 rounded-0';
 
@@ -136,9 +130,17 @@ export default class View {
       ul.append(li);
     });
 
-    this.feeds.append(headCard);
-    this.feeds.append(ul);
-    this.submitBtn.disabled = false;
-    this.input.value = input;
+    this.elems.feeds.append(headCard);
+    this.elems.feeds.append(ul);
+    this.elems.submitBtn.disabled = false;
+    this.elems.input.value = input;
   }
 }
+
+export default (elems) => (
+  i18n.init({
+    lng: 'ru',
+    resources,
+  })
+    .then((t) => new View(elems, t))
+);

@@ -1,122 +1,76 @@
 import 'regenerator-runtime/runtime.js';
-import onChange from 'on-change';
-import * as yup from 'yup';
-import i18n from 'i18next';
 import parseRss from './parseRss.js';
 import loadRss from './loadRss.js';
-import View from './View.js';
-import resources from './locales/index.js';
 import Timer from './Timer.js';
 import loadNewPosts from './loadNewPosts.js';
+import validator from './validator.js';
+import createState from './createState.js';
+import createView from './createView.js';
 
-const app = async () => {
-  await i18n.init({
-    lng: 'ru',
-    resources,
-  });
-
-  yup.setLocale({
-    mixed: {
-      notOneOf: i18n.t('errors.url_exist'),
-      required: i18n.t('errors.required'),
-    },
-    string: {
-      url: i18n.t('errors.url'),
-    },
-  });
-
-  const initialState = {
-    state: 'clean',
-    input: null,
-    currentPostId: null,
-    feeds: [],
-    posts: [],
-    readPostsIds: [],
-    errors: [],
+const app = () => {
+  const elems = {
+    app: document.getElementById('app'),
+    form: document.getElementById('rssForm'),
+    input: document.getElementById('rssSource'),
+    submitBtn: document.querySelector('[type="submit"]'),
+    posts: document.getElementById('rssPosts'),
+    feeds: document.getElementById('rssFeeds'),
+    modal: document.getElementById('modal'),
+    feedback: document.querySelector('.feedback'),
   };
 
-  const view = new View();
+  createView(elems)
+    .then((view) => {
+      const state = createState(view);
 
-  const watchedState = onChange(initialState, () => {
-    switch (watchedState.state) {
-      case 'pending':
-        view.disableForm();
-        break;
-      case 'invalid':
-        view.cleanupFeedback();
-        view.enableForm(watchedState);
-        view.renderFeedback(watchedState);
-        break;
-      case 'show':
-        view.cleanupFeedback();
-        view.enableForm(watchedState);
-        view.renderPosts(watchedState);
-        view.renderFeeds(watchedState);
-        view.renderFeedback(watchedState);
-        break;
-      case 'show-new-posts':
-        view.renderModal(watchedState);
-        view.renderPosts(watchedState);
-        break;
-      case 'clean':
-      default:
-        view.cleanupForm();
-    }
-  });
-
-  const timer = new Timer(() => {
-    loadNewPosts(watchedState)
-      .then((newPosts) => {
-        if (newPosts.length > 0) {
-          watchedState.posts = [...watchedState.posts, ...newPosts];
-          watchedState.state = 'show-new-posts';
+      elems.posts.addEventListener('click', (e) => {
+        const { target: { tagName, dataset: { postId } } } = e;
+        if (tagName !== 'A' && tagName !== 'BUTTON') {
+          return;
         }
+
+        state.readPostsIds.push(postId);
+        state.currentPostId = postId;
+        state.state = 'show-new-posts';
       });
-  });
 
-  view.posts.addEventListener('click', (e) => {
-    const { target: { tagName, dataset: { postId } } } = e;
-    if (tagName !== 'A' && tagName !== 'BUTTON') {
-      return;
-    }
-
-    watchedState.readPostsIds.push(postId);
-    watchedState.currentPostId = postId;
-    watchedState.state = 'show-new-posts';
-  });
-
-  view.form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    watchedState.state = 'pending';
-    watchedState.input = view.input.value;
-
-    const schema = yup.string()
-      .required()
-      .url()
-      .notOneOf(watchedState.feeds.map((feed) => feed.source));
-    schema.validate(watchedState.input)
-      .then((url) => loadRss(url))
-      .then((response) => parseRss(response))
-      .then(({
-        id, title, description, link, posts,
-      }) => {
-        watchedState.feeds.push({
-          title, description, link, id, source: watchedState.input,
-        });
-        watchedState.posts = [...watchedState.posts, ...posts];
-        watchedState.errors = [];
-        watchedState.input = null;
-        watchedState.state = 'show';
-
-        timer.start();
-      })
-      .catch((err) => {
-        watchedState.errors.push(i18n.t(err.message));
-        watchedState.state = 'invalid';
+      const timer = new Timer(() => {
+        loadNewPosts(state)
+          .then((newPosts) => {
+            if (newPosts.length > 0) {
+              state.posts = [...state.posts, ...newPosts];
+              state.state = 'show-new-posts';
+            }
+          });
       });
-  });
+
+      elems.form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        state.state = 'pending';
+        state.input = elems.input.value;
+
+        validator(state.input, state.feeds.map((feed) => feed.source))
+          .then((url) => loadRss(url))
+          .then((response) => parseRss(response))
+          .then(({
+            id, title, description, link, posts,
+          }) => {
+            state.feeds.push({
+              title, description, link, id, source: state.input,
+            });
+            state.posts = [...state.posts, ...posts];
+            state.errors = [];
+            state.input = null;
+            state.state = 'show';
+
+            timer.start();
+          })
+          .catch((err) => {
+            state.errors.push(err.message);
+            state.state = 'invalid';
+          });
+      });
+    });
 };
 
-export default async () => {
-  await app();
-};
+export default app;
