@@ -39,7 +39,7 @@ const app = () => {
         loadNewPosts(state)
           .then((newPosts) => {
             if (newPosts.length > 0) {
-              state.posts = [...state.posts, ...newPosts];
+              state.posts = [...newPosts, ...state.posts];
               state.state = 'show-new-posts';
             }
           })
