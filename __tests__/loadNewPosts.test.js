@@ -30,8 +30,8 @@ test('load new posts', async () => {
   await expect(loadNewPosts(state))
     .resolves
     .toEqual([{
-      id: 'feed_1.post_3',
-      feedId: 'feed_1',
+      id: '1',
+      feedId: '1',
       title: 'Post 3',
       description: 'Example description for post 3',
       link: 'https://test.com/example/post-3',

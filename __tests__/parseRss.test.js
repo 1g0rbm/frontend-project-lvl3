@@ -25,10 +25,6 @@ test('parsing valid rss feed', () => {
   expect(parseRss(validFeed)).toEqual(ast);
 });
 
-test('parsing valid rss feed with existed feedId', () => {
-  expect(parseRss(validFeed, 'feed_101').id).toEqual('feed_101');
-});
-
 test('parsing invalid rss feed', () => {
   expect(() => parseRss(invalidFeed)).toThrowError('errors.invalid_rss');
 });

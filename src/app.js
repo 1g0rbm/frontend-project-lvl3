@@ -1,4 +1,5 @@
 import 'regenerator-runtime/runtime.js';
+import _ from 'lodash';
 import parseRss from './parseRss.js';
 import loadRss from './loadRss.js';
 import Timer from './Timer.js';
@@ -53,12 +54,17 @@ const app = () => {
           .then((url) => loadRss(url))
           .then((response) => parseRss(response))
           .then(({
-            id, title, description, link, posts,
+            title, description, link, posts,
           }) => {
+            const feedId = _.uniqueId();
+
             state.feeds.push({
-              title, description, link, id, source: state.input,
+              title, description, link, id: feedId, source: state.input,
             });
-            state.posts = [...state.posts, ...posts];
+            state.posts = [
+              ...posts.map((post) => ({ ...post, feedId, id: _.uniqueId() })),
+              ...state.posts,
+            ];
             state.errors = [];
             state.input = null;
             state.state = 'show';

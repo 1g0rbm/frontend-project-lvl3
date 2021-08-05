@@ -3,9 +3,14 @@ import loadRss from './loadRss.js';
 import parseRss from './parseRss.js';
 
 export default (state) => Promise.all(state.feeds.map((feed) => loadRss(feed.source)
-  .then((data) => parseRss(data, feed.id))
+  .then((data) => parseRss(data))
   .then((parsed) => {
-    const statePosts = state.posts.filter((post) => post.feedId === feed.id);
-    return _.differenceWith(parsed.posts, statePosts, _.isEqual);
+    const statePostsTitles = state.posts
+      .filter((post) => post.feedId === feed.id)
+      .map((post) => post.title);
+
+    return parsed.posts
+      .filter((post) => !statePostsTitles.includes(post.title))
+      .map((post) => ({ ...post, feedId: feed.id, id: _.uniqueId() }));
   })))
   .then((data) => _.flatten(data));
