@@ -3,7 +3,7 @@ import http from 'axios/lib/adapters/http';
 import nock from 'nock';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { test, expect } from '@jest/globals';
+import { test, expect, beforeEach } from '@jest/globals';
 import loadRss from '../src/loadRss';
 import loadFileContent from './helpers/loadFileContent.js';
 
@@ -11,6 +11,11 @@ axios.defaults.adapter = http;
 
 const filenamePath = fileURLToPath(import.meta.url);
 const dirnamePath = dirname(filenamePath);
+
+let url;
+beforeEach(() => {
+  url = new URL('https://hexlet-allorigins.herokuapp.com/get?url=url&disableCache=true');
+});
 
 test('successfull rss loading', async () => {
   const rssFeedPath = join(dirnamePath, '..', '__fixtures__', 'valid_feed.rss');
@@ -20,7 +25,7 @@ test('successfull rss loading', async () => {
     .get('/get?url=url&disableCache=true')
     .reply(200, { contents: rssFeed });
 
-  await expect(loadRss('url')).resolves.toBe(rssFeed);
+  await expect(loadRss(url)).resolves.toBe(rssFeed);
 });
 
 test('error rss loading', async () => {
@@ -28,5 +33,5 @@ test('error rss loading', async () => {
     .get('/get?url=url&disableCache=true')
     .replyWithError('Enternal error');
 
-  await expect(loadRss('url')).rejects.toThrowError('errors.internet');
+  await expect(loadRss(url)).rejects.toThrowError('errors.internet');
 });

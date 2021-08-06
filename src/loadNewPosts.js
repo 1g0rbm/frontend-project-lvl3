@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import loadRss from './loadRss.js';
 import parseRss from './parseRss.js';
+import proxyUrl from './proxyUrl.js';
 
-export default (state) => Promise.all(state.feeds.map((feed) => loadRss(feed.source)
+export default (state) => Promise.all(state.feeds.map((feed) => loadRss(proxyUrl(feed.source))
   .then((data) => parseRss(data))
   .then((parsed) => {
     const statePostsTitles = state.posts

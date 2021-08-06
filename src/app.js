@@ -4,9 +4,10 @@ import parseRss from './parseRss.js';
 import loadRss from './loadRss.js';
 import Timer from './Timer.js';
 import loadNewPosts from './loadNewPosts.js';
-import validator from './validator.js';
+import validate from './validator.js';
 import createState from './createState.js';
 import createView from './createView.js';
+import proxyUrl from './proxyUrl.js';
 
 const app = () => {
   const elems = {
@@ -50,8 +51,8 @@ const app = () => {
         state.state = 'pending';
         state.input = elems.input.value;
 
-        validator(state.input, state.feeds.map((feed) => feed.source))
-          .then((url) => loadRss(url))
+        validate(state.input, state.feeds.map((feed) => feed.source))
+          .then((url) => loadRss(proxyUrl(url)))
           .then((response) => parseRss(response))
           .then(({
             title, description, link, posts,
