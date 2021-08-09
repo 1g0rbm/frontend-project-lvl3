@@ -4,12 +4,22 @@ import parseRss from './parseRss.js';
 import loadRss from './loadRss.js';
 import Timer from './Timer.js';
 import loadNewPosts from './loadNewPosts.js';
-import validate from './validator.js';
+import { setCustomLocale, validateUrl } from './validator.js';
 import createState from './createState.js';
 import createView from './createView.js';
 import proxyUrl from './proxyUrl.js';
 
 const app = () => {
+  setCustomLocale({
+    mixed: {
+      notOneOf: 'errors.url_exist',
+      required: 'errors.required',
+    },
+    string: {
+      url: 'errors.url',
+    },
+  });
+
   const elems = {
     app: document.getElementById('app'),
     form: document.getElementById('rssForm'),
@@ -51,7 +61,7 @@ const app = () => {
         state.state = 'pending';
         state.input = elems.input.value;
 
-        validate(state.input, state.feeds.map((feed) => feed.source))
+        validateUrl(state.input, state.feeds.map((feed) => feed.source))
           .then((url) => loadRss(proxyUrl(url)))
           .then((response) => parseRss(response))
           .then(({

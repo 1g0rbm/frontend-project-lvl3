@@ -1,16 +1,10 @@
 import * as yup from 'yup';
 
-yup.setLocale({
-  mixed: {
-    notOneOf: 'errors.url_exist',
-    required: 'errors.required',
-  },
-  string: {
-    url: 'errors.url',
-  },
-});
+export const setCustomLocale = (locale) => {
+  yup.setLocale(locale);
+};
 
-export default (url, existedUrls) => {
+export const validateUrl = (url, existedUrls) => {
   const schema = yup.string()
     .required()
     .url()
