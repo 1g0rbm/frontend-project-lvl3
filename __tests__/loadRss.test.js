@@ -14,7 +14,7 @@ const dirnamePath = dirname(filenamePath);
 
 let url;
 beforeEach(() => {
-  url = new URL('https://hexlet-allorigins.herokuapp.com/get?url=url&disableCache=true');
+  url = 'https://hexlet-allorigins.herokuapp.com/get?url=url&disableCache=true';
 });
 
 test('successfull rss loading', async () => {

@@ -5,5 +5,5 @@ export default (url) => {
   proxiedUrl.searchParams.append('url', url);
   proxiedUrl.searchParams.append('disableCache', true);
 
-  return proxiedUrl;
+  return proxiedUrl.toString();
 };
