@@ -9,7 +9,7 @@ export default class Timer {
     this.stop();
 
     this.timeoutId = setTimeout(
-      () => Promise.resolve(this.func()).then(() => this.start()),
+      () => Promise.resolve(this.func()).finally(() => this.start()),
       this.delay,
     );
   }
