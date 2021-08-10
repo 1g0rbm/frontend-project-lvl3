@@ -1,13 +1,13 @@
 import 'regenerator-runtime/runtime.js';
 import _ from 'lodash';
+import onChange from 'on-change';
+import i18n from 'i18next';
 import parseRss from './parseRss.js';
-import loadRss from './loadRss.js';
+import { loadRss, loadNewPosts, proxyUrl } from './loadRss.js';
 import Timer from './Timer.js';
-import loadNewPosts from './loadNewPosts.js';
+import View from './View.js';
 import { setCustomLocale, validateUrl } from './validator.js';
-import createState from './createState.js';
-import createView from './createView.js';
-import proxyUrl from './proxyUrl.js';
+import resources from './locales/index.js';
 
 const app = () => {
   setCustomLocale({
@@ -31,9 +31,49 @@ const app = () => {
     feedback: document.querySelector('.feedback'),
   };
 
-  createView(elems)
+  i18n.init({
+    lng: 'ru',
+    resources,
+  })
+    .then((t) => new View(elems, t))
     .then((view) => {
-      const state = createState(view);
+      const state = onChange(
+        {
+          state: 'clean',
+          input: null,
+          currentPostId: null,
+          feeds: [],
+          posts: [],
+          readPostsIds: [],
+          errors: [],
+        },
+        () => {
+          switch (state.state) {
+            case 'pending':
+              view.disableForm();
+              break;
+            case 'invalid':
+              view.cleanupFeedback();
+              view.enableForm(state);
+              view.renderFeedback(state);
+              break;
+            case 'show':
+              view.cleanupFeedback();
+              view.enableForm(state);
+              view.renderPosts(state);
+              view.renderFeeds(state);
+              view.renderFeedback(state);
+              break;
+            case 'show-new-posts':
+              view.renderModal(state);
+              view.renderPosts(state);
+              break;
+            case 'clean':
+            default:
+              view.cleanupForm();
+          }
+        },
+      );
 
       elems.posts.addEventListener('click', (e) => {
         const { target: { tagName, dataset: { postId } } } = e;
