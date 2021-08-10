@@ -61,7 +61,8 @@ const app = () => {
         state.state = 'pending';
         state.input = elems.input.value;
 
-        validateUrl(state.input, state.feeds.map((feed) => feed.source))
+        const existedUrls = state.feeds.map((feed) => feed.source);
+        validateUrl(state.input, existedUrls)
           .then((url) => loadRss(proxyUrl(url)))
           .then((response) => parseRss(response))
           .then(({

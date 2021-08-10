@@ -5,13 +5,16 @@ import proxyUrl from './proxyUrl.js';
 
 export default (state) => Promise.all(state.feeds.map((feed) => loadRss(proxyUrl(feed.source))
   .then((data) => parseRss(data))
-  .then((parsed) => {
-    const statePostsTitles = state.posts
-      .filter((post) => post.feedId === feed.id)
-      .map((post) => post.title);
+  .then((data) => {
+    const newPosts = data.posts;
+    const statePosts = state.posts;
 
-    return parsed.posts
-      .filter((post) => !statePostsTitles.includes(post.title))
-      .map((post) => ({ ...post, feedId: feed.id, id: _.uniqueId() }));
+    const postsDiff = _.differenceWith(
+      newPosts,
+      statePosts,
+      (a, b) => a.title === b.title,
+    );
+
+    return postsDiff.map((post) => ({ ...post, feedId: feed.id, id: _.uniqueId() }));
   })))
   .then((data) => _.flatten(data));
