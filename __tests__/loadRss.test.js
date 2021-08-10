@@ -33,5 +33,5 @@ test('error rss loading', async () => {
     .get('/get?url=url&disableCache=true')
     .replyWithError('Enternal error');
 
-  await expect(loadRss(url)).rejects.toThrowError('errors.internet');
+  await expect(loadRss(url)).rejects.toThrowError('Enternal error');
 });

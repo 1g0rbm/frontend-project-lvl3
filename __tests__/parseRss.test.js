@@ -26,5 +26,5 @@ test('parsing valid rss feed', () => {
 });
 
 test('parsing invalid rss feed', () => {
-  expect(() => parseRss(invalidFeed)).toThrowError('errors.invalid_rss');
+  expect(() => parseRss(invalidFeed)).toThrowError('4:5: disallowed character in attribute name.');
 });

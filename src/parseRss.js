@@ -2,16 +2,23 @@ import _ from 'lodash';
 
 const parser = new DOMParser();
 
+const throwParsingError = (msg) => {
+  const error = new Error(msg);
+  error.isParsingError = true;
+
+  throw error;
+};
+
 export default (rssXml) => {
   const doc = parser.parseFromString(rssXml, 'application/xml');
 
   const err = doc.querySelector('parsererror');
   if (err) {
-    throw new Error('errors.invalid_rss');
+    throwParsingError(err.textContent);
   }
 
   if (doc.firstChild.tagName !== 'rss') {
-    throw new Error('errors.invalid_rss');
+    throw throwParsingError('There is no rss tag in content');
   }
 
   const title = doc.querySelector('title');

@@ -83,7 +83,16 @@ const app = () => {
             timer.start();
           })
           .catch((err) => {
-            state.errors.push(err.message);
+            if (err.isAxiosError) {
+              state.errors.push('errors.internet');
+            } else if (err.isParsingError) {
+              state.errors.push('errors.invalid_rss');
+            } else if (err.isValidationError) {
+              state.errors.push(err.message);
+            } else {
+              state.errors.push('errors.unknown');
+            }
+
             state.state = 'invalid';
           });
       });
